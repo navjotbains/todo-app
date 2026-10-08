@@ -1,4 +1,23 @@
-@TodoApp.Api_HostAddress = http://localhost:5225
+@host = http://localhost:5225
 
+### Get all todos
+GET {{host}}/api/todos
 
-###
+### Add a todo
+POST {{host}}/api/todos
+Content-Type: application/json
+
+{
+  "title": "Buy milk"
+}
+
+### Delete a todo (paste an id from the add response)
+DELETE {{host}}/api/todos/01a11910-8d00-7ead-bc8a-2e34a96a1a59
+
+### Add a todo with an empty title (expect 400)
+POST {{host}}/api/todos
+Content-Type: application/json
+
+{
+  "title": ""
+}
