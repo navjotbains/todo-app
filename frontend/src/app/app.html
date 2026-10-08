@@ -1,0 +1,21 @@
+<main class="app">
+  <h1>My Todos</h1>
+
+  <app-todo-form (add)="store.add($event)" />
+
+  @if (store.error(); as error) {
+    <p class="error" role="alert">{{ error }}</p>
+  }
+
+  @if (store.loading()) {
+    <p>Loading…</p>
+  } @else {
+    <ul class="todo-list">
+      @for (todo of store.todos(); track todo.id) {
+        <li><app-todo-item [todo]="todo" (remove)="store.remove($event)" /></li>
+      } @empty {
+        <li class="empty">Nothing to do. Add your first todo above.</li>
+      }
+    </ul>
+  }
+</main>

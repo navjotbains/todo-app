@@ -1,0 +1,4 @@
+<span class="title">{{ todo().title }}</span>
+<button type="button" (click)="remove.emit(todo().id)" [attr.aria-label]="'Delete ' + todo().title">
+  Delete
+</button>

@@ -1,0 +1,12 @@
+<form (submit)="submit($event)">
+  <label for="new-todo" class="visually-hidden">New todo</label>
+  <input
+    id="new-todo"
+    type="text"
+    placeholder="What needs doing?"
+    autocomplete="off"
+    maxlength="200"
+    [value]="title()"
+    (input)="onInput($event)" />
+  <button type="submit" [disabled]="!title().trim()">Add</button>
+</form>
