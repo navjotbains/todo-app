@@ -1,4 +1,5 @@
 # My Todos
+![CI](https://github.com/navjotbains/todo-app/actions/workflows/ci.yml/badge.svg)
 
 A todo list app built with Angular 22 and a .NET 10 Web API.
 
