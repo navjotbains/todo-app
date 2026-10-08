@@ -24,6 +24,8 @@ A todo list app built with Angular 22 and a .NET 10 Web API.
 Requirements: .NET 10 SDK and Node.js 22 or later.
 
 ```bash
+git clone https://github.com/navjotbains/todo-app.git
+cd todo-app
 npm start
 ```
 
