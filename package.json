@@ -1,0 +1,13 @@
+{
+  "name": "todo-app",
+  "private": true,
+  "scripts": {
+    "postinstall": "npm --prefix frontend install",
+    "start": "concurrently -n api,web -c cyan,magenta \"dotnet run --project backend/src/TodoApp.Api\" \"wait-on http-get://localhost:5225/health && npm --prefix frontend start\"",
+    "test": "dotnet test backend/TodoApp.slnx && npm --prefix frontend test -- --watch=false"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5",
+    "wait-on": "^9.5.1"
+  }
+}
