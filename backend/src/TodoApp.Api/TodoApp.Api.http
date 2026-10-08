@@ -21,3 +21,11 @@ Content-Type: application/json
 {
   "title": ""
 }
+
+### Mark a todo as complete (paste an id)
+PATCH {{host}}/api/todos/PASTE-ID-HERE
+Content-Type: application/json
+
+{
+  "isCompleted": true
+}

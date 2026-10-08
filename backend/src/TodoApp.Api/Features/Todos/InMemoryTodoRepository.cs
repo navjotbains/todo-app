@@ -27,4 +27,18 @@ public sealed class InMemoryTodoRepository : ITodoRepository
 
     public Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken) =>
         Task.FromResult(_items.TryRemove(id, out _));
+
+    public Task<TodoItem?> UpdateAsync(Guid id, Func<TodoItem, TodoItem> update, CancellationToken cancellationToken)
+    {
+        while (_items.TryGetValue(id, out var current))
+        {
+            var updated = update(current);
+            if (_items.TryUpdate(id, updated, current))
+            {
+                return Task.FromResult<TodoItem?>(updated);
+            }
+        }
+
+        return Task.FromResult<TodoItem?>(null);
+    }
 }

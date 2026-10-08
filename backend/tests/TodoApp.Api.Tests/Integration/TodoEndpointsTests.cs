@@ -75,4 +75,36 @@ public class TodoEndpointsTests : IDisposable
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
+
+    [Fact]
+    public async Task UpdateTodo_WhenExists_ReturnsOkWithUpdatedTodo()
+    {
+        var created = await _client.PostAsJsonAsync("/api/todos", new CreateTodoRequest("Buy milk"));
+        var todo = await created.Content.ReadFromJsonAsync<TodoResponse>();
+
+        var response = await _client.PatchAsJsonAsync($"/api/todos/{todo!.Id}", new UpdateTodoRequest(true));
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var updated = await response.Content.ReadFromJsonAsync<TodoResponse>();
+        Assert.True(updated!.IsCompleted);
+    }
+
+    [Fact]
+    public async Task UpdateTodo_WhenMissing_ReturnsNotFound()
+    {
+        var response = await _client.PatchAsJsonAsync($"/api/todos/{Guid.NewGuid()}", new UpdateTodoRequest(true));
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task UpdateTodo_WithoutIsCompleted_ReturnsBadRequest()
+    {
+        var created = await _client.PostAsJsonAsync("/api/todos", new CreateTodoRequest("Buy milk"));
+        var todo = await created.Content.ReadFromJsonAsync<TodoResponse>();
+
+        var response = await _client.PatchAsJsonAsync($"/api/todos/{todo!.Id}", new { });
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
 }

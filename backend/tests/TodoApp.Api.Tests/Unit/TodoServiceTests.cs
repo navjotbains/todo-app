@@ -60,4 +60,31 @@ public class TodoServiceTests
 
         Assert.False(deleted);
     }
+
+    [Fact]
+    public async Task CreateAsync_StartsNotCompleted()
+    {
+        var todo = await _service.CreateAsync(new CreateTodoRequest("Buy milk"), CancellationToken.None);
+
+        Assert.False(todo.IsCompleted);
+    }
+
+    [Fact]
+    public async Task SetCompletedAsync_MarksTodoAsCompleted()
+    {
+        var todo = await _service.CreateAsync(new CreateTodoRequest("Buy milk"), CancellationToken.None);
+
+        var updated = await _service.SetCompletedAsync(todo.Id, true, CancellationToken.None);
+
+        Assert.True(updated!.IsCompleted);
+        Assert.Equal("Buy milk", updated.Title);
+    }
+
+    [Fact]
+    public async Task SetCompletedAsync_ReturnsNull_WhenTodoDoesNotExist()
+    {
+        var updated = await _service.SetCompletedAsync(Guid.NewGuid(), true, CancellationToken.None);
+
+        Assert.Null(updated);
+    }
 }

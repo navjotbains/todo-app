@@ -13,7 +13,7 @@ public sealed class TodoService(ITodoRepository repository, TimeProvider timePro
     public async Task<TodoResponse> CreateAsync(CreateTodoRequest request, CancellationToken cancellationToken)
     {
         var now = timeProvider.GetUtcNow();
-        var item = new TodoItem(Guid.CreateVersion7(now), request.Title.Trim(), now);
+        var item = new TodoItem(Guid.CreateVersion7(now), request.Title.Trim(), false, now);
 
         await repository.AddAsync(item, cancellationToken);
         return TodoResponse.FromEntity(item);
@@ -21,4 +21,10 @@ public sealed class TodoService(ITodoRepository repository, TimeProvider timePro
 
     public Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken) =>
         repository.DeleteAsync(id, cancellationToken);
+
+    public async Task<TodoResponse?> SetCompletedAsync(Guid id, bool isCompleted, CancellationToken cancellationToken)
+    {
+        var updated = await repository.UpdateAsync(id, item => item with { IsCompleted = isCompleted }, cancellationToken);
+        return updated is null ? null : TodoResponse.FromEntity(updated);
+    }
 }

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { Todo } from './todo.model';
 
@@ -15,6 +15,8 @@ export class TodoStore {
   readonly todos = this._todos.asReadonly();
   readonly loading = this._loading.asReadonly();
   readonly error = this._error.asReadonly();
+  readonly count = computed(() => this._todos().length);
+  readonly completedCount = computed(() => this._todos().filter(todo => todo.isCompleted).length);
 
   async load(): Promise<void> {
     this._loading.set(true);
@@ -46,5 +48,21 @@ export class TodoStore {
     } catch {
       this._error.set('Could not delete the todo. Please try again.');
     }
+  }
+
+  async setCompleted(id: string, isCompleted: boolean): Promise<void> {
+    this._error.set(null);
+    this.replace(id, todo => ({ ...todo, isCompleted }));
+    try {
+        const updated = await firstValueFrom(this.http.patch<Todo>(`${this.url}/${id}`, { isCompleted }));
+        this.replace(id, () => updated);
+    } catch {
+        this.replace(id, todo => ({ ...todo, isCompleted: !isCompleted }));
+        this._error.set('Could not update the todo. Please try again.');
+    }
+  }
+
+  private replace(id: string, change: (todo: Todo) => Todo): void {
+    this._todos.update(todos => todos.map(todo => (todo.id === id ? change(todo) : todo)));
   }
 }

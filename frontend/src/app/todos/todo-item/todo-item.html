@@ -1,4 +1,18 @@
-<span class="title">{{ todo().title }}</span>
-<button type="button" (click)="remove.emit(todo().id)" [attr.aria-label]="'Delete ' + todo().title">
-  Delete
+<label class="check">
+  <input
+    type="checkbox"
+    [checked]="todo().isCompleted"
+    (change)="toggle.emit(!todo().isCompleted)"
+    [attr.aria-label]="'Complete ' + todo().title" />
+  <span class="box" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+  </span>
+</label>
+<span class="title" [class.done]="todo().isCompleted">{{ todo().title }}</span>
+<button type="button" class="delete" (click)="remove.emit(todo().id)" [attr.aria-label]="'Delete ' + todo().title">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M3 6h18" />
+    <path d="M8 6V4h8v2" />
+    <path d="M19 6l-1 14H6L5 6" />
+  </svg>
 </button>

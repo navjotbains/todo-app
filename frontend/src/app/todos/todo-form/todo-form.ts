@@ -1,4 +1,4 @@
-import { Component, output, signal } from '@angular/core';
+import { Component, computed, output, signal } from '@angular/core';
 
 @Component({
   selector: 'app-todo-form',
@@ -7,10 +7,15 @@ import { Component, output, signal } from '@angular/core';
 })
 export class TodoForm {
   readonly add = output<string>();
+
+  protected readonly maxLength = 200;
+  protected readonly counterFrom = 150;
   protected readonly title = signal('');
+  protected readonly length = computed(() => this.title().length);
 
   protected onInput(event: Event): void {
-    this.title.set((event.target as HTMLInputElement).value);
+    const value = (event.target as HTMLTextAreaElement).value;
+    this.title.set(value.replace(/\s*\n\s*/g, ' '));
   }
 
   protected submit(event: Event): void {

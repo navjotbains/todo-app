@@ -1,0 +1,77 @@
+form {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+}
+
+.field {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+textarea {
+  width: 100%;
+  min-height: 50px;
+  max-height: 160px;
+  padding: var(--space-3) 80px var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+  line-height: 1.5;
+  resize: none;
+  overflow-y: auto;
+  field-sizing: content;
+  transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
+
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background: var(--color-surface);
+    box-shadow: var(--glow-focus);
+  }
+}
+
+.counter {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.counter--limit {
+  color: var(--color-danger);
+}
+
+button {
+  height: 50px;
+  padding: 0 var(--space-5);
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--gradient-primary);
+  color: var(--color-on-primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter var(--transition), box-shadow var(--transition), transform var(--transition);
+
+  &:hover:not(:disabled) {
+    filter: brightness(1.08);
+    box-shadow: var(--glow-primary);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

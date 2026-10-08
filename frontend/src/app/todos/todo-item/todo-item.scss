@@ -1,0 +1,140 @@
+:host {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+:host(:hover) {
+  border-color: var(--color-primary);
+  box-shadow: var(--glow-soft);
+}
+
+.title {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.delete {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  opacity: 0.4;
+  transition: opacity var(--transition), background var(--transition), color var(--transition);
+
+  svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  &:hover {
+    background: var(--color-danger-soft);
+    color: var(--color-danger);
+  }
+
+  &:focus-visible {
+    opacity: 1;
+  }
+}
+
+:host(:hover) .delete {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .delete {
+    opacity: 1;
+  }
+}
+
+.check {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  cursor: pointer;
+
+  input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+}
+
+.box {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 2px solid color-mix(in srgb, var(--color-text-muted) 50%, transparent);
+  border-radius: 7px;
+  transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+
+  svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: var(--color-on-primary);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 24;
+    stroke-dashoffset: 24;
+    transition: stroke-dashoffset 250ms ease;
+  }
+}
+
+.check:hover .box {
+  border-color: var(--color-primary);
+}
+
+input:focus-visible + .box {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+input:checked + .box {
+  background: var(--gradient-primary);
+  border-color: transparent;
+  box-shadow: var(--glow-primary);
+  animation: pop 250ms ease;
+
+  svg {
+    stroke-dashoffset: 0;
+  }
+}
+
+.title {
+  transition: color var(--transition), opacity var(--transition);
+
+  &.done {
+    color: var(--color-text-muted);
+    text-decoration: line-through;
+    text-decoration-color: var(--color-primary);
+    opacity: 0.7;
+  }
+}
+
+@keyframes pop {
+  50% {
+    transform: scale(1.15);
+  }
+}

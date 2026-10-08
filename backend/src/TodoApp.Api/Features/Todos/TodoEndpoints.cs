@@ -12,6 +12,7 @@ public static class TodoEndpoints
         group.MapGet("/", GetAll).WithName("GetTodos");
         group.MapPost("/", Create).WithName("CreateTodo");
         group.MapDelete("/{id:guid}", Delete).WithName("DeleteTodo");
+        group.MapPatch("/{id:guid}", Update).WithName("UpdateTodo");
 
         return app;
     }
@@ -32,4 +33,11 @@ public static class TodoEndpoints
         await service.DeleteAsync(id, cancellationToken)
             ? TypedResults.NoContent()
             : TypedResults.NotFound();
+
+    private static async Task<Results<Ok<TodoResponse>, NotFound>> Update(
+        Guid id, UpdateTodoRequest request, ITodoService service, CancellationToken cancellationToken)
+    {
+        var todo = await service.SetCompletedAsync(id, request.IsCompleted!.Value, cancellationToken);
+        return todo is null ? TypedResults.NotFound() : TypedResults.Ok(todo);
+    }
 }

@@ -1,12 +1,19 @@
 <form (submit)="submit($event)">
-  <label for="new-todo" class="visually-hidden">New todo</label>
-  <input
-    id="new-todo"
-    type="text"
-    placeholder="What needs doing?"
-    autocomplete="off"
-    maxlength="200"
-    [value]="title()"
-    (input)="onInput($event)" />
+  <div class="field">
+    <label for="new-todo" class="visually-hidden">New todo</label>
+    <textarea
+      id="new-todo"
+      rows="1"
+      placeholder="What needs doing?"
+      [attr.maxlength]="maxLength"
+      [value]="title()"
+      (input)="onInput($event)"
+      (keydown.enter)="submit($event)"></textarea>
+    @if (length() >= counterFrom) {
+      <span class="counter" [class.counter--limit]="maxLength - length() <= 10" aria-live="polite">
+        {{ length() }} / {{ maxLength }}
+      </span>
+    }
+  </div>
   <button type="submit" [disabled]="!title().trim()">Add</button>
 </form>

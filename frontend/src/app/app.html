@@ -1,21 +1,102 @@
-<main class="app">
-  <h1>My Todos</h1>
+<main class="page">
+  <section class="card" aria-labelledby="page-title">
+    <header class="card-header">
+      <div>
+        <p class="date">{{ today | date: 'EEEE, d MMMM' }}</p>
+        <h1 id="page-title">My Todos</h1>
+        <p class="summary">
+          @if (store.count() === 0) {
+            No tasks yet
+          } @else {
+            {{ store.completedCount() }} of {{ store.count() }} done
+          }
+        </p>
+      </div>
+      <button
+        type="button"
+        class="theme-toggle"
+        (click)="theme.toggle()"
+        [attr.aria-label]="theme.theme() === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'">
+        @if (theme.theme() === 'dark') {
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+          </svg>
+        } @else {
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        }
+      </button>
+    </header>
 
-  <app-todo-form (add)="store.add($event)" />
+    <div
+      class="progress"
+      role="progressbar"
+      aria-label="Tasks completed"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      [attr.aria-valuenow]="progress()">
+      <div class="progress-fill" [style.width.%]="progress()"></div>
+    </div>
 
-  @if (store.error(); as error) {
-    <p class="error" role="alert">{{ error }}</p>
-  }
+    <app-todo-form (add)="store.add($event)" />
 
-  @if (store.loading()) {
-    <p>Loading…</p>
-  } @else {
-    <ul class="todo-list">
-      @for (todo of store.todos(); track todo.id) {
-        <li><app-todo-item [todo]="todo" (remove)="store.remove($event)" /></li>
-      } @empty {
-        <li class="empty">Nothing to do. Add your first todo above.</li>
-      }
-    </ul>
-  }
+    @if (store.error(); as error) {
+      <p class="error" role="alert">{{ error }}</p>
+    }
+
+    @if (store.count() > 0) {
+      <nav class="filters" aria-label="Filter todos">
+        @for (option of filters; track option.value) {
+          <button
+            type="button"
+            class="filter"
+            [class.active]="filter() === option.value"
+            [attr.aria-pressed]="filter() === option.value"
+            (click)="filter.set(option.value)">
+            {{ option.label }}
+            <span class="filter-count">{{ counts()[option.value] }}</span>
+          </button>
+        }
+      </nav>
+    }
+
+    @if (store.loading()) {
+      <p class="visually-hidden" role="status">Loading your todos…</p>
+      <ul class="todo-list" aria-hidden="true">
+        @for (row of skeletonRows; track row) {
+          <li class="skeleton"></li>
+        }
+      </ul>
+    } @else {
+      <ul class="todo-list">
+        @for (todo of visibleTodos(); track todo.id) {
+          <li animate.enter="todo-enter" animate.leave="todo-leave">
+            <app-todo-item
+              [todo]="todo"
+              (remove)="store.remove($event)"
+              (toggle)="store.setCompleted(todo.id, $event)" />
+          </li>
+        } @empty {
+          <li class="empty">
+            <svg class="empty-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 11l3 3L22 4" />
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+            </svg>
+            @if (store.count() === 0) {
+              <p class="empty-title">All clear</p>
+              <p class="empty-text">Add your first todo above to get started.</p>
+            } @else if (filter() === 'active') {
+              <p class="empty-title">All done!</p>
+              <p class="empty-text">Nothing left to do. Nice work.</p>
+            } @else {
+              <p class="empty-title">Nothing done yet</p>
+              <p class="empty-text">Tick a todo and it will show up here.</p>
+            }
+          </li>
+        }
+      </ul>
+    }
+  </section>
 </main>
