@@ -1,4 +1,5 @@
 # My Todos
+
 ![CI](https://github.com/navjotbains/todo-app/actions/workflows/ci.yml/badge.svg)
 
 A todo list app built with Angular 22 and a .NET 10 Web API.
@@ -23,13 +24,12 @@ A todo list app built with Angular 22 and a .NET 10 Web API.
 Requirements: .NET 10 SDK and Node.js 22 or later.
 
 ```bash
-npm install
 npm start
 ```
 
 Then open http://localhost:4200.
 
-This starts the API on http://localhost:5225 (API docs at http://localhost:5225/swagger) and the Angular app on port 4200. Requests to `/api` are proxied from Angular to the API. Data is held in memory and resets when the API restarts.
+On the first run this installs the frontend packages. It then starts the API on http://localhost:5225 (API docs at http://localhost:5225/swagger), waits for it to be ready, and starts the Angular app on port 4200. Requests to `/api` are proxied from Angular to the API. Data is held in memory and resets when the API restarts.
 
 ## Tests
 
